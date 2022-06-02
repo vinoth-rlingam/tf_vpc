@@ -37,7 +37,7 @@ locals {
   tags = {
     EnvironmentType = "Dev"
     ServiceName = "karpenter"
-    Owner = "srt-aus"
+    Owner = "Vinoth"
   }
 }
 
