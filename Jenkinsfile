@@ -50,8 +50,7 @@ pipeline {
         stage('terraform apply or destroy') {
             steps{
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'AWSCredentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) { 
-                    script {  
-                        def envrt=params.ENV_TO_CREATE
+                    script {
                         if (params.ACTION == "destroy") {
                             sh ('echo Requested action is ' + params.ACTION)   
                             sh 'terraform destroy -auto-approve'
