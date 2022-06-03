@@ -51,13 +51,13 @@ pipeline {
             steps{
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'AWSCredentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) { 
                     script {  
-                        if (params.ACCION == "destroy"){
-                                 sh 'echo "llego" + params.ACCION'   
+                        if (params.ACTION == "destroy"){
+                                 sh 'echo "Requested action is: " + params.ACTION'   
                                  sh 'terraform destroy -auto-approve'
                         } else {
-                         sh ' echo  "llego" + params.ACCION'                 
+                         sh ' echo  "Requested action is: " + params.ACTION'                 
                          sh 'terraform apply -refresh=true -auto-approve'  
-                        }  // if
+                        } 
                     }
                 }
             }
