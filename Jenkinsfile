@@ -42,7 +42,7 @@ pipeline {
         stage('terraform plan') {
             steps{
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'AWSCredentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-                sh 'terraform init -input=false'
+                sh 'terraform init -input=false -no-color'
                 sh 'terraform plan -no-color -out=tfplan'
                 }
             }
