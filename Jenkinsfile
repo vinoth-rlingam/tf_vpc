@@ -43,7 +43,7 @@ pipeline {
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'AWSCredentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
                 sh 'terraform init -input=false'
                 sh 'terraform plan -out=tfplan -input=false'
-                sh 'terraform show -no-color tfplan
+                sh 'terraform show -no-color tfplan'
                 }
             }
         }
@@ -57,7 +57,7 @@ pipeline {
                         } else {
                          sh ' echo  "Requested action is: " + params.ACTION'                 
                          sh 'terraform apply -var 'env=${params.ENVIRONMENTS}' -auto-approve'
-                         sh 'terraform show -no-color
+                         sh 'terraform show -no-color'
                         } 
                     }
                 }
