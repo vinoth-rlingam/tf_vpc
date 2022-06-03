@@ -50,6 +50,7 @@ pipeline {
             steps {
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'AWSCredentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
                 sh 'terraform plan -out=tfplan -input=false'
+                sh 'terraform show -no-color tfplan
               }
             }
         }
@@ -57,6 +58,7 @@ pipeline {
             steps{
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'AWSCredentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) { 
                 sh 'terraform destroy --auto-approve'
+                sh 'terraform show -no-color
                 }
             }
         }
