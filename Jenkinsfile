@@ -42,7 +42,7 @@ pipeline {
             steps{
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'AWSCredentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
                 sh 'terraform init -input=false'
-                sh 'terraform plan -out=tfplan -input=false'
+                sh 'terraform plan -no-color -out=tfplan -input=false'
                 }
             }
         }
@@ -55,7 +55,7 @@ pipeline {
                             sh 'terraform destroy -auto-approve'
                         } else {
                             sh (' echo  Requested action is ' + params.ACTION)                
-                            sh 'terraform apply -auto-approve -var environ='params.ENVIRONMENTS''
+                            sh 'terraform apply -auto-approve -no-color' -var environ=params.ENVIRONMENTS'
                         } 
                     }
                 }
