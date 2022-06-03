@@ -1,3 +1,3 @@
-variable "env" {
+variable "environ" {
   default = ""
 }
