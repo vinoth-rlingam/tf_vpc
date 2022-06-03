@@ -11,7 +11,7 @@ pipeline {
     
     environment {
         TF_IN_AUTOMATION      = '1'
-        TF_WORKSPACE =  "${params.ENVIRONMENTS}"
+        TF_WORKSPACE =  "${params.ENV_TO_CREATE}"
     }
 
     
@@ -56,7 +56,7 @@ pipeline {
                             sh 'terraform destroy -auto-approve'
                         } else {
                             sh (' echo  Requested action is ' + params.ACTION)                
-                            sh 'terraform apply -auto-approve -no-color -var environ=$envrt'
+                            sh 'terraform apply -auto-approve -no-color -var environ='$envrt''
                         } 
                     }
                 }
