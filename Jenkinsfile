@@ -3,6 +3,12 @@ pipeline {
     tools {
        terraform 'terraform'
     }
+    parameters {
+        string(name: 'BUCKET', defaultValue: 'default', description: 's3 bucket  name to store terraform state')
+        string(name: 'REGION', defaultValue: 'us-east-1', description: 'AWS region')
+        booleanParam(name: 'autoApprove', defaultValue: false, description: 'Automatically run apply after generating plan?')
+    }
+    
     stages {
         stage('Create Bucket') {  
             steps {  
