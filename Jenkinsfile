@@ -13,7 +13,6 @@ pipeline {
     
     environment {
         TF_IN_AUTOMATION      = '1'
-        TF_WORKSPACE =  "${params.environment}"
     }
 
     
