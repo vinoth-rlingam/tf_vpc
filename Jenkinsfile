@@ -55,7 +55,7 @@ pipeline {
                             sh 'terraform destroy -auto-approve'
                         } else {
                             sh (' echo  Requested action is ' + params.ACTION)                
-                            sh 'terraform apply -var environ=params.ENVIRONMENTS -auto-approve'
+                            sh 'terraform apply -var environ='params.ENVIRONMENTS' -auto-approve'
                         } 
                     }
                 }
