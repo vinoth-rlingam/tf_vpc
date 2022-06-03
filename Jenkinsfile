@@ -4,8 +4,6 @@ pipeline {
     parameters {
         string(name: 'BUCKET', defaultValue: 's3statestore-vpctf', description: 's3 bucket  name to store terraform state')
         string(name: 'REGION', defaultValue: 'us-east-1', description: 'AWS region')
-        booleanParam(name: 'autoApprove', defaultValue: false, description: 'Automatically run apply after generating plan?')
-        string(name: 'environment', defaultValue: 'dev', description: 'Workspace/environment file to use for deployment')
         choice(name: 'ENVIRONMENTS', choices: ['dev', 'prod'], description: 'Select the environment to create')
         choice(name: 'ACTION', choices: ['apply', 'destroy'], description: 'Select the terraform action to perform')
 
@@ -13,6 +11,7 @@ pipeline {
     
     environment {
         TF_IN_AUTOMATION      = '1'
+        TF_WORKSPACE =  "${params.ENVIRONMENTS}"
     }
 
     
@@ -39,22 +38,16 @@ pipeline {
                 }  
             }   
         }
-        stage('terraform Init') {
+        stage('terraform plan') {
             steps{
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'AWSCredentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
                 sh 'terraform init -input=false'
+                sh 'terraform plan -out=tfplan -input=false'
+                sh 'terraform show -no-color tfplan
                 }
             }
         }
-        stage('Terraform Plan') {
-            steps {
-                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'AWSCredentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-                sh 'terraform plan -out=tfplan -input=false'
-                sh 'terraform show -no-color tfplan
-              }
-            }
-        }
-        stage('terraform apply') {
+        stage('terraform apply or destroy') {
             steps{
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'AWSCredentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) { 
                 sh 'terraform destroy --auto-approve'
