@@ -6,6 +6,9 @@ pipeline {
         string(name: 'REGION', defaultValue: 'us-east-1', description: 'AWS region')
         booleanParam(name: 'autoApprove', defaultValue: false, description: 'Automatically run apply after generating plan?')
         string(name: 'environment', defaultValue: 'dev', description: 'Workspace/environment file to use for deployment')
+        choice(name: 'ENVIRONMENTS', choices: ['dev', 'prod'], description: 'Select the environment to create')
+        choice(name: 'ACTION', choices: ['apply', 'destroy'], description: 'Select the terraform action to perform')
+
     }
     
     environment {
@@ -54,7 +57,7 @@ pipeline {
         stage('terraform apply') {
             steps{
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'AWSCredentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) { 
-                sh 'terraform apply --auto-approve -input=false tfplan'
+                sh 'terraform destroy --auto-approve'
                 }
             }
         }
