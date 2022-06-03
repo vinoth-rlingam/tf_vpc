@@ -1,8 +1,6 @@
 pipeline {
     agent any
-    tools {
-       terraform 'terraform'
-    }
+    
     parameters {
         string(name: 'BUCKET', defaultValue: 'default', description: 's3 bucket  name to store terraform state')
         string(name: 'REGION', defaultValue: 'us-east-1', description: 'AWS region')
