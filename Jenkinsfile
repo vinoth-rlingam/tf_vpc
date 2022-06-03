@@ -56,7 +56,7 @@ pipeline {
                             sh 'terraform destroy -auto-approve'
                         } else {
                             sh (' echo  Requested action is ' + params.ACTION)                
-                            sh 'terraform apply -auto-approve -no-color -var environ='$envrt''
+                            sh 'terraform apply -auto-approve -no-color -var environ='${envrt}''
                         } 
                     }
                 }
