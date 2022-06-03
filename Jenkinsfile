@@ -53,10 +53,10 @@ pipeline {
                     script {  
                         if (params.ACTION == "destroy"){
                             sh 'echo "Requested action is: " + params.ACTION'   
-                                 sh 'terraform destroy -auto-approve'
+                            sh 'terraform destroy -auto-approve'
                         } else {
                             sh ' echo  "Requested action is: " + params.ACTION'                 
-                         sh 'terraform apply -var environ=${params.ENVIRONMENTS} -auto-approve'
+                         sh 'terraform apply -var environ=params.ENVIRONMENTS -auto-approve'
                          sh 'terraform show -no-color'
                         } 
                     }
