@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     parameters {
-        string(name: 'BUCKET', defaultValue: 'default', description: 's3 bucket  name to store terraform state')
+        string(name: 'BUCKET', defaultValue: 's3statestore-vpctf', description: 's3 bucket  name to store terraform state')
         string(name: 'REGION', defaultValue: 'us-east-1', description: 'AWS region')
         booleanParam(name: 'autoApprove', defaultValue: false, description: 'Automatically run apply after generating plan?')
     }
