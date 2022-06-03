@@ -12,7 +12,7 @@ data "aws_availability_zones" "available" {
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "3.11.0"
-  name                 = "k8-vpc-karpenter-${var.env}"
+  name                 = "k8-vpc-karpenter-${var.environ}"
   cidr                 = "10.0.0.0/16"
   azs                  = data.aws_availability_zones.available.names
   private_subnets      = ["10.0.7.0/24", "10.0.8.0/24", "10.0.9.0/24"]
