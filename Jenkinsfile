@@ -12,6 +12,7 @@ pipeline {
     environment {
         TF_IN_AUTOMATION      = '1'
         TF_WORKSPACE =  "${params.ENV_TO_CREATE}"
+        TF_VAR_environ = "${params.ENV_TO_CREATE}"
     }
 
     
@@ -42,7 +43,7 @@ pipeline {
             steps{
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'AWSCredentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
                 sh 'terraform init -input=false'
-                sh 'terraform plan -no-color -out=tfplan -var 'environ=params.ENV_TO_CREATE''
+                sh 'terraform plan -no-color -out=tfplan'
                 }
             }
         }
@@ -56,7 +57,7 @@ pipeline {
                             sh 'terraform destroy -auto-approve'
                         } else {
                             sh (' echo  Requested action is ' + params.ACTION)                
-                            sh 'terraform apply -auto-approve -no-color tfplan'
+                            sh 'terraform apply -auto-approve -no-color'
                         } 
                     }
                 }
