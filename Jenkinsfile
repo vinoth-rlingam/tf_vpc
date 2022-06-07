@@ -1,28 +1,18 @@
 pipeline {
     agent any
     
-    properties([       
-        parameters ([
-            string(name: 'BUCKET', 
-                    defaultValue: 's3statestore-vpctf', 
-                    description: 's3 bucket  name to store terraform state'),
-            string(name: 'REGION', 
-                    defaultValue: 'us-east-1', 
-                    description: 'AWS region'),
-            choice(name: 'ENV_TO_CREATE', 
-                    choices: ['dev', 'prod'], 
-                    description: 'Select the environment to create'),
-            choice(name: 'ACTION', 
-                    choices: ['apply', 'destroy'], 
-                    description: 'Select the terraform action to perform')
-        ]),
-        buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '10')),
-    ])
+    parameters {
+        string(name: 'BUCKET', defaultValue: 's3statestore-vpctf', description: 's3 bucket  name to store terraform state')
+        string(name: 'REGION', defaultValue: 'us-east-1', description: 'AWS region')
+        choice(name: 'ENV_TO_CREATE', choices: ['dev', 'prod'], description: 'Select the environment to create')
+        choice(name: 'ACTION', choices: ['apply', 'destroy'], description: 'Select the terraform action to perform')
+
+    }
     
     environment {
         TF_IN_AUTOMATION      = '1'
-        TF_WORKSPACE =  "${ENV_TO_CREATE}"
-        TF_VAR_environ = "${ENV_TO_CREATE}"
+        TF_WORKSPACE =  "${params.ENV_TO_CREATE}"
+        TF_VAR_environ = "${params.ENV_TO_CREATE}"
     }
 
     
@@ -32,8 +22,8 @@ pipeline {
                 echo 'Running create bucket phase'
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'AWSCredentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) { 
                     script {
-                        def status = sh(script: "aws s3api head-bucket --bucket ${BUCKET}", returnStatus: true)
-                        def create = sh(script: "aws s3api create-bucket --bucket ${BUCKET} --region ${REGION}", returnStatus: true)
+                        def status = sh(script: "aws s3api head-bucket --bucket ${params.BUCKET}", returnStatus: true)
+                        def create = sh(script: "aws s3api create-bucket --bucket ${params.BUCKET} --region ${params.REGION}", returnStatus: true)
                         try {
                         if (status == 0) { // Check if the bucket exists
                             echo 'Bucket already exists'
@@ -61,11 +51,11 @@ pipeline {
             steps{
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'AWSCredentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) { 
                     script {
-                        if (${ACTION} == "destroy") {
-                            sh ('echo Requested action is ' + ${ACTION})   
+                        if (params.ACTION == "destroy") {
+                            sh ('echo Requested action is ' + params.ACTION)   
                             sh 'terraform destroy -auto-approve'
                         } else {
-                            sh (' echo  Requested action is ' + ${ACTION})                
+                            sh (' echo  Requested action is ' + params.ACTION)                
                             sh 'terraform apply -auto-approve -no-color'
                         } 
                     }
